@@ -46,5 +46,7 @@ let () =
     end;
     printfn "}"
   | "solve"::i::[] ->
-    Solver.solve @@ Problem.parse @@ int i
+    let p = Problem.parse @@ int i in
+    let coords = Solver.solve p in
+    Solution.save (int_of_string i) @@ Solution.make p coords
   | _ -> printfn "so what?"

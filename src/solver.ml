@@ -26,21 +26,22 @@ let solve p =
 
   let offset = 15 in
 
-  let _perf = List.map (fun inst ->
-    let c = CC.count counter inst in
-
+  List.map (fun inst ->
     let (center_x, center_y) = Hashtbl.find h_centers inst in
 
     let rec loop () =
+      let c = CC.count counter inst in
       let coord_x = float (offset * (fx c)) +. center_x in
       let coord_y = float (offset * (fy c)) +. center_y in
 
-      if Numeric.inside coord_x coord_y p then
+      printfn "inst %d CC %d X %f Y %f" inst  c coord_x coord_y;
+
+      CC.plus counter inst 1;
+
+      if Numeric.inside coord_x coord_y p then begin
         coord_x, coord_y
-      else begin
-        CC.add counter inst;
+      end else begin
         loop ()
       end
     in loop ()
   ) (Array.to_list p.musicians)
-  in ()
