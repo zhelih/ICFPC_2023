@@ -1,8 +1,8 @@
-run:
-	dune exec ./main.exe
-
 build:
 	dune build
+
+run:
+	dune exec ./main.exe
 
 gen:
 	atdgen -t -j-std problem.atd

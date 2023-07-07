@@ -1,11 +1,21 @@
-open Printf
 open Devkit
-
-let problem n = sprintf "../problem/%d" n
-let problems = 45
+open Problem_t
 
 let () =
-  for i = 1 to problems do
-    let j = Problem_j.problem_of_string @@ Std.input_file @@ problem i in
-    printfn "%d %d" (List.length j.musicians) (List.length j.attendees)
-  done
+  match Nix.args with
+  | "check"::[] ->
+    for i = 1 to Problem.total do
+      let p = Problem.parse i in
+      printfn "%d %d" (List.length p.musicians) (List.length p.attendees)
+    done
+  | "draw"::i::[] ->
+    let p = Problem.parse @@ int_of_string i in
+    printfn "digraph problem_%s {" i;
+    printfn "node [margin=0 fontcolor=black fontsize=32 width=5 shape=circle style=filled fillcolor=blue]";
+    printfn "stage [shape=box fillcolor=gray pin=true pos=\"%g,%g\" width=%g height=%g]"
+      (Problem.stage_center_x p) (Problem.stage_center_y p) p.stage_width p.stage_height;
+    p.attendees |> List.iteri begin fun i a ->
+      printfn "%d [pin=true pos=\"%g,%g\"]" i a.x a.y;
+    end;
+    printfn "}"
+  | _ -> printfn "so what?"
