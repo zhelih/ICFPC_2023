@@ -1,0 +1,5 @@
+i=$1
+if [ -r solution/$i ]; then
+  echo submitting $i
+  curl -H 'Content-Type: application/json' -H "Authorization: Bearer $(cat token)" -XPOST https://api.icfpcontest.com/submission --data-binary @<(jq --argjson id $i --arg c "$(cat solution/$i)" -n '{problem_id:$id, contents:$c}')
+fi
