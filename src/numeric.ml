@@ -16,7 +16,7 @@ type problem = {
 let almost_optimal_musician inst p =
   let atts = List.filter_map (fun att ->
     let t = List.nth att.tastes inst in
-    if abs_float t < 0.00001 then None else
+    if Float.abs t < Float.epsilon then None else
       Some (att.x, att.y, t)
   ) p.attendees in (* FIXME better *)
   let sum_ti = List.fold_left (fun prev (_,_,t) -> prev +. (1. /. t)) 0. atts in
