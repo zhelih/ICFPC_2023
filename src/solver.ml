@@ -26,7 +26,16 @@ let solve p =
 
   let offset = 15 in
 
-  List.map (fun inst ->
+  let res = DynArray.create () in
+
+  let check_good x y =
+    try
+      let _ = DynArray.index_of (fun (a,b) -> (x -. a)** 2. +. (y -. b)**2. <= 100.) res in
+      false
+    with Not_found -> true
+  in
+
+  List.iter (fun inst ->
     let (center_x, center_y) = Hashtbl.find h_centers inst in
 
     let rec loop () =
@@ -38,10 +47,11 @@ let solve p =
 
       CC.plus counter inst 1;
 
-      if Numeric.inside coord_x coord_y p then begin
-        coord_x, coord_y
+      if Numeric.inside coord_x coord_y p && check_good coord_x coord_y then begin
+        DynArray.add res (coord_x, coord_y)
       end else begin
         loop ()
       end
     in loop ()
-  ) (Array.to_list p.musicians)
+  ) (Array.to_list p.musicians);
+  DynArray.to_list res
