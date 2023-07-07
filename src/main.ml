@@ -23,7 +23,7 @@ let () =
     for i = 0 to Problem.total do
       if nums = [] || List.mem i nums then
       begin
-        printfn "%d) %10.0f" i (Solution.score (Problem.parse i) (Solution.parse i))
+        printfn "%d) %g" i (Solution.score (Problem.parse i) (Solution.parse i).placements)
       end
     done
   | "draw"::i::[] ->
@@ -47,6 +47,6 @@ let () =
     printfn "}"
   | "solve"::i::[] ->
     let p = Problem.parse @@ int i in
-    let coords = Solver.solve p in
+    let coords = Solver.solve_with_ls p in
     Solution.save (int_of_string i) @@ Solution.make p coords
   | _ -> printfn "so what?"
