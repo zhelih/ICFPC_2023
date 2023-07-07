@@ -15,7 +15,7 @@ let rec_run p placements score0 =
       if not !changed && Numeric.inside xx yy p then begin
         changed := true;
         placements.(i) <- (xx, yy);
-        new_score := Solution.score_tuple p placements;
+        new_score := Solution.calc_score p placements;
         if !new_score <= score0 then changed := false
       end
     in
@@ -36,7 +36,7 @@ let rec_run p placements score0 =
 
 let run p placements =
   let placements = Array.of_list placements in
-  let score0 = Solution.score_tuple p placements in
+  let score0 = Solution.calc_score p placements in
   printfn "Starting local search step = %f, score = %f" step score0;
   let rec loop i sc0 =
     let c, nsc = rec_run p placements sc0 in

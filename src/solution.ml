@@ -38,42 +38,19 @@ let is_blocked (x1,y1) (x2,y2) (x0,y0) =
     ( (t1 >= 0.) && (t1 <= 1.) ) || ( (t2 >= 0.) && (t2 <= 1.) )
   end
 
-(*
 let calc_score p coords =
-  assert (List.length coords = Array.length p.musicians);
+  assert (Array.length coords = Array.length p.musicians);
   p.attendees
   |> List.map begin fun a ->
-    coords |> List.mapi (fun i m ->
-      if coords |> List.exists (fun mm -> mm <> m && is_blocked m (a.x,a.y) mm) then
+    coords |> Array.mapi (fun i m ->
+      if coords |> Array.exists (fun mm -> mm <> m && is_blocked m (a.x,a.y) mm) then
         0.
       else
         let d2 = sqr (a.x -. fst m) +. sqr (a.y -. snd m) in
         Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2))
-    |> List.fold_left (+.) 0.
+    |> Array.fold_left (+.) 0.
   end
   |> List.fold_left (+.) 0.
 
 let score p s =
-  calc_score p (List.map pt s.placements)
-*)
-let score p placements =
-  assert (List.length placements = Array.length p.musicians);
-  p.attendees
-  |> List.map begin fun a ->
-    placements |> List.mapi (fun i (m:placement) ->
-      let d2 = sqr (a.x -. m.x) +. sqr (a.y -. m.y) in
-      1_000_000. *. a.tastes.(p.musicians.(i)) /. d2)
-    |> List.fold_left (+.) 0.
-  end
-    |> List.fold_left (+.) 0.
-
-let score_tuple p placements =
-  assert (Array.length placements = Array.length p.musicians);
-  p.attendees
-  |> List.map begin fun a ->
-    placements |> Array.mapi (fun i (mx, my) ->
-      let d2 = sqr (a.x -. mx) +. sqr (a.y -. my) in
-      1_000_000. *. a.tastes.(p.musicians.(i)) /. d2)
-    |> Array.fold_left (+.) 0.
-  end
-    |> List.fold_left (+.) 0.
+  calc_score p (List.map pt s.placements |> Array.of_list)
