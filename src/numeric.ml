@@ -15,7 +15,7 @@ type problem = {
 (* compute almost-optimal x and y for musician and all attendees, corner is likely *)
 let almost_optimal_musician inst p =
   let atts = List.filter_map (fun att ->
-    let t = List.nth att.tastes inst in
+    let t = att.tastes.(inst) in
     if Float.abs t < Float.epsilon then None else
       Some (att.x, att.y, t)
   ) p.attendees in (* FIXME better *)

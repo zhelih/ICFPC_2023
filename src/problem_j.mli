@@ -4,7 +4,7 @@
 type attendee = Problem_t.attendee = {
   x: float;
   y: float;
-  tastes: float list
+  tastes: float Atdgen_runtime.Util.ocaml_array
 }
 
 type problem = Problem_t.problem = {
@@ -13,7 +13,7 @@ type problem = Problem_t.problem = {
   stage_width: float;
   stage_height: float;
   stage_bottom_left: float list;
-  musicians: int list;
+  musicians: int Atdgen_runtime.Util.ocaml_array;
   attendees: attendee list
 }
 

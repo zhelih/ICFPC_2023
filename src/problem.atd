@@ -1,10 +1,10 @@
-type attendee = { x : float; y : float; tastes : float list }
+type attendee = { x : float; y : float; tastes : float list <ocaml repr="array"> }
 type problem = {
   room_width : float;
   room_height : float;
   stage_width : float;
   stage_height: float;
   stage_bottom_left: float list;
-  musicians : int list;
+  musicians : int list <ocaml repr="array">;
   attendees: attendee list;
 }

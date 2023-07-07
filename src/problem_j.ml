@@ -4,7 +4,7 @@
 type attendee = Problem_t.attendee = {
   x: float;
   y: float;
-  tastes: float list
+  tastes: float Atdgen_runtime.Util.ocaml_array
 }
 
 type problem = Problem_t.problem = {
@@ -13,26 +13,26 @@ type problem = Problem_t.problem = {
   stage_width: float;
   stage_height: float;
   stage_bottom_left: float list;
-  musicians: int list;
+  musicians: int Atdgen_runtime.Util.ocaml_array;
   attendees: attendee list
 }
 
-let write__float_list = (
-  Atdgen_runtime.Oj_run.write_list (
+let write__x_adbef7e = (
+  Atdgen_runtime.Oj_run.write_array (
     Yojson.Safe.write_std_float
   )
 )
-let string_of__float_list ?(len = 1024) x =
+let string_of__x_adbef7e ?(len = 1024) x =
   let ob = Buffer.create len in
-  write__float_list ob x;
+  write__x_adbef7e ob x;
   Buffer.contents ob
-let read__float_list = (
-  Atdgen_runtime.Oj_run.read_list (
+let read__x_adbef7e = (
+  Atdgen_runtime.Oj_run.read_array (
     Atdgen_runtime.Oj_run.read_number
   )
 )
-let _float_list_of_string s =
-  read__float_list (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
+let _x_adbef7e_of_string s =
+  read__x_adbef7e (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
 let write_attendee : _ -> attendee -> _ = (
   fun ob (x : attendee) ->
     Buffer.add_char ob '{';
@@ -61,7 +61,7 @@ let write_attendee : _ -> attendee -> _ = (
       Buffer.add_char ob ',';
       Buffer.add_string ob "\"tastes\":";
     (
-      write__float_list
+      write__x_adbef7e
     )
       ob x.tastes;
     Buffer.add_char ob '}';
@@ -134,7 +134,7 @@ let read_attendee = (
             field_tastes := (
               Some (
                 (
-                  read__float_list
+                  read__x_adbef7e
                 ) p lb
               )
             );
@@ -199,7 +199,7 @@ let read_attendee = (
               field_tastes := (
                 Some (
                   (
-                    read__float_list
+                    read__x_adbef7e
                   ) p lb
                 )
               );
@@ -221,22 +221,38 @@ let read_attendee = (
 )
 let attendee_of_string s =
   read_attendee (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
-let write__int_list = (
-  Atdgen_runtime.Oj_run.write_list (
+let write__x_b7676c2 = (
+  Atdgen_runtime.Oj_run.write_array (
     Yojson.Safe.write_int
   )
 )
-let string_of__int_list ?(len = 1024) x =
+let string_of__x_b7676c2 ?(len = 1024) x =
   let ob = Buffer.create len in
-  write__int_list ob x;
+  write__x_b7676c2 ob x;
   Buffer.contents ob
-let read__int_list = (
-  Atdgen_runtime.Oj_run.read_list (
+let read__x_b7676c2 = (
+  Atdgen_runtime.Oj_run.read_array (
     Atdgen_runtime.Oj_run.read_int
   )
 )
-let _int_list_of_string s =
-  read__int_list (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
+let _x_b7676c2_of_string s =
+  read__x_b7676c2 (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
+let write__float_list = (
+  Atdgen_runtime.Oj_run.write_list (
+    Yojson.Safe.write_std_float
+  )
+)
+let string_of__float_list ?(len = 1024) x =
+  let ob = Buffer.create len in
+  write__float_list ob x;
+  Buffer.contents ob
+let read__float_list = (
+  Atdgen_runtime.Oj_run.read_list (
+    Atdgen_runtime.Oj_run.read_number
+  )
+)
+let _float_list_of_string s =
+  read__float_list (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
 let write__attendee_list = (
   Atdgen_runtime.Oj_run.write_list (
     write_attendee
@@ -308,7 +324,7 @@ let write_problem : _ -> problem -> _ = (
       Buffer.add_char ob ',';
       Buffer.add_string ob "\"musicians\":";
     (
-      write__int_list
+      write__x_b7676c2
     )
       ob x.musicians;
     if !is_first then
@@ -466,7 +482,7 @@ let read_problem = (
             field_musicians := (
               Some (
                 (
-                  read__int_list
+                  read__x_b7676c2
                 ) p lb
               )
             );
@@ -611,7 +627,7 @@ let read_problem = (
               field_musicians := (
                 Some (
                   (
-                    read__int_list
+                    read__x_b7676c2
                   ) p lb
                 )
               );

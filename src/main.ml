@@ -10,8 +10,9 @@ let () =
       if nums = [] || List.mem i nums then
       begin
         let p = Problem.parse i in
-        let bad_taste = p.attendees |> List.exists (fun a -> a.tastes |> List.exists (fun t -> Float.abs t < Float.epsilon)) in
-        printfn "%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (List.length p.musicians) (Problem.has_neg p) bad_taste
+        let has_zero = p.attendees |> List.exists (fun a -> a.tastes |> Array.exists (fun t -> Float.abs t < Float.epsilon)) in
+        let has_neg = p.attendees |> List.exists (fun a -> a.tastes |> Array.exists (fun t -> t < 0.)) in
+        printfn "%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (Array.length p.musicians) has_neg has_zero
       end
     done
   | "draw"::i::[] ->
