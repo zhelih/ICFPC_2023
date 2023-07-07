@@ -44,7 +44,7 @@ let run p placements =
     let c, nsc = rec_run p placements sc0 in
     if c then (
       if i mod 100 = 0 then printfn "Local Search : score = %f" nsc;
-      loop (i+1) nsc
+      if i < 20_000 then loop (i+1) nsc
     )
   in
   loop 0 score0;
