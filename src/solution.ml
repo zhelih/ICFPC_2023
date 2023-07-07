@@ -1,4 +1,4 @@
-  open Printf
+open Printf
 open Problem_t
 
 let path i = sprintf "../solution/%d" i
@@ -38,16 +38,19 @@ let is_blocked (x1,y1) (x2,y2) (x0,y0) =
     ( (t1 >= 0.) && (t1 <= 1.) ) || ( (t2 >= 0.) && (t2 <= 1.) )
   end
 
-let score p s =
-  assert (List.length s.placements = Array.length p.musicians);
+let calc_score p coords =
+  assert (List.length coords = Array.length p.musicians);
   p.attendees
   |> List.map begin fun a ->
-    s.placements |> List.mapi (fun i (m:placement) ->
-      if s.placements |> List.exists (fun mm -> mm <> m && is_blocked (pt m) (a.x,a.y) (pt mm)) then
+    coords |> List.mapi (fun i m ->
+      if coords |> List.exists (fun mm -> mm <> m && is_blocked m (a.x,a.y) mm) then
         0.
       else
-        let d2 = sqr (a.x -. m.x) +. sqr (a.y -. m.y) in
+        let d2 = sqr (a.x -. fst m) +. sqr (a.y -. snd m) in
         Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2))
     |> List.fold_left (+.) 0.
   end
-    |> List.fold_left (+.) 0.
+  |> List.fold_left (+.) 0.
+
+let score p s =
+  calc_score p (List.map pt s.placements)
