@@ -11,7 +11,7 @@ let stage_center_y p = stage_y p +. p.stage_height /. 2.
 
 let instruments p =
   let maxi = Array.fold_left max 0 p.musicians in
-  let a = Array.make maxi 0 in
+  let a = Array.make (maxi+1) 0 in
   p.musicians |> Array.iter (fun i -> a.(i) <- a.(i) + 1);
   a
 

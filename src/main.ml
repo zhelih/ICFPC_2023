@@ -6,15 +6,16 @@ let int = int_of_string
 let () =
   match Nix.args with
   | "stats"::nums ->
-    printfn "ID\tAtt\tMus\tNeg\tZero";
+    printfn "ID\tAtt\tMus\tTastes\tNeg\tZero";
     let nums = List.map int nums in
     for i = 0 to Problem.total do
       if nums = [] || List.mem i nums then
       begin
         let p = Problem.parse i in
+        let is = Problem.instruments p in
         let has_zero = p.attendees |> List.exists (fun a -> a.tastes |> Array.exists (fun t -> Float.abs t < Float.epsilon)) in
         let has_neg = p.attendees |> List.exists (fun a -> a.tastes |> Array.exists (fun t -> t < 0.)) in
-        printfn "%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (Array.length p.musicians) has_neg has_zero
+        printfn "%d\t%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (Array.length p.musicians) (Array.length is) has_neg has_zero
       end
     done
   | "draw"::i::[] ->
