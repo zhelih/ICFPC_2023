@@ -42,7 +42,10 @@ let run p placements =
   printfn "Starting local search step = %f, score = %f" step score0;
   let rec loop i sc0 =
     let c, nsc = rec_run p placements sc0 in
-    if c then loop (i+1) nsc else printfn "Local Search : score = %f" nsc
+    if c then (
+      if i mod 100 = 0 then printfn "Local Search : score = %f" nsc;
+      loop (i+1) nsc
+    )
   in
   loop 0 score0;
   printfn "done"
