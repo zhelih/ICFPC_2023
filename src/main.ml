@@ -21,10 +21,7 @@ let () =
   | "score"::nums ->
     let nums = List.map int nums in
     for i = 0 to Problem.total do
-      if nums = [] || List.mem i nums then
-      begin
-        printfn "%d) %g" i (Solution.score (Problem.parse i) (Solution.parse i))
-      end
+      if nums = [] || List.mem i nums then printfn "%d) %#d" i (int_of_float @@ Solution.score (Problem.parse i) (Solution.parse i))
     done
   | "draw"::i::[] ->
     let p = Problem.parse @@ int i in
@@ -48,5 +45,7 @@ let () =
   | "solve"::i::[] ->
     let p = Problem.parse @@ int i in
     let coords = Solver.solve_with_ls p in
-    Solution.save (int_of_string i) @@ Solution.make p coords
+    let s = Solution.make p coords in
+    printfn "solution %s score %#d" i (int_of_float @@ Solution.score p s);
+    Solution.save (int_of_string i) s
   | _ -> printfn "so what?"
