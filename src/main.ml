@@ -18,6 +18,14 @@ let () =
         printfn "%d\t%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (Array.length p.musicians) (Array.length is) has_neg has_zero
       end
     done
+  | "score"::nums ->
+    let nums = List.map int nums in
+    for i = 0 to Problem.total do
+      if nums = [] || List.mem i nums then
+      begin
+        printfn "%d) %g" i (Solution.score (Problem.parse i) (Solution.parse i))
+      end
+    done
   | "draw"::i::[] ->
     let p = Problem.parse @@ int i in
     printfn "digraph problem_%s {" i;

@@ -14,13 +14,3 @@ let instruments p =
   let a = Array.make (maxi+1) 0 in
   p.musicians |> Array.iter (fun i -> a.(i) <- a.(i) + 1);
   a
-
-(*
-let score p positions =
-  assert (List.length positions = List.length p.musicians);
-  p.attendees
-  |> List.map begin fun a ->
-    a.tastes
-  end
-  |> List.fold_left (+.) 0.
-*)
