@@ -12,6 +12,17 @@ type problem = {
   attendees: attendee list
 }
 *)
+
+let stage_x_l p = 10. +. (List.nth p.stage_bottom_left 0)
+let stage_y_l p = 10. +. (List.nth p.stage_bottom_left 1)
+let stage_x_u p = -10. +. (List.nth p.stage_bottom_left 0) +. p.stage_width
+let stage_y_u p = -10. +. (List.nth p.stage_bottom_left 1) +. p.stage_height
+
+let inside x y p =
+  x >= (stage_x_l p) && x <= (stage_x_u p) &&
+  y >= (stage_y_l p) &&
+  y <= (stage_y_u p)
+
 (* compute almost-optimal x and y for musician and all attendees, corner is likely *)
 let almost_optimal_musician inst p =
   let atts = List.filter_map (fun att ->
@@ -26,14 +37,7 @@ let almost_optimal_musician inst p =
   let x_star = sum_ai_ti /. sum_ti in
   let y_star = sum_bi_ti /. sum_ti in
 
-  (* place inside of the stage +- 10 *)
-  let stage_x_min = 10. +. (List.nth p.stage_bottom_left 0) in
-  let stage_x_max = -10. +. (List.nth p.stage_bottom_left 0) +. p.stage_width in
-
-  let stage_y_min = 10. +. (List.nth p.stage_bottom_left 1) in
-  let stage_y_max = -10. +. (List.nth p.stage_bottom_left 1) +. p.stage_height in
-
-  let x_sol = min ((max x_star stage_x_min)) (stage_x_max) in
-  let y_sol = min ((max y_star stage_y_min)) (stage_y_max) in
+  let x_sol = min (max x_star (stage_x_l p)) (stage_x_u p) in
+  let y_sol = min (max y_star (stage_y_l p)) (stage_y_u p) in
 
   x_sol, y_sol
