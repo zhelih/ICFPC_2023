@@ -3,16 +3,12 @@ open Problem_t
 
 let () =
   match Nix.args with
-  | "check"::[] ->
-    for i = 1 to Problem.total do
-      let p = Problem.parse i in
-      printfn "%d %d" (List.length p.musicians) (List.length p.attendees)
-    done
   | "stats"::[] ->
-    printfn "ID\tAtt\tMus\tNeg";
-    for i = 1 to Problem.total do
+    printfn "ID\tAtt\tMus\tNeg\tZero";
+    for i = 0 to Problem.total do
       let p = Problem.parse i in
-      printfn "%d\t%d\t%d\t%b" i (List.length p.attendees) (List.length p.musicians) (Problem.has_neg p)
+      let bad_taste = p.attendees |> List.exists (fun a -> a.tastes |> List.exists (fun t -> Float.abs t < Float.epsilon)) in
+      printfn "%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (List.length p.musicians) (Problem.has_neg p) bad_taste
     done
   | "draw"::i::[] ->
     let p = Problem.parse @@ int_of_string i in
