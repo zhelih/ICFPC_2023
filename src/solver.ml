@@ -3,14 +3,14 @@ open Problem_t
 
 module CC = Cache.Count
 
-let offset = 10.0
+let offset = 15.
 
 let nth_offset n = float_of_int n *. offset
 
 let gen_snake (x,y) =
   let l = ref [x,y] in
   let margin = ref 1 in
-  fun () ->
+  fun _c ->
     match !l with
     | [t] ->
       let m = nth_offset !margin in
@@ -22,6 +22,19 @@ let gen_snake (x,y) =
       t
     | t::ts -> l := ts; t
     | [] -> assert false
+
+let gen_cross =
+  let fx c =
+    let x_sign = if c / 2 mod 2 == 1 then 1 else -1 in
+    let x_lvl = if c mod 2 == 1 then 0 else (c-1)/4 + 1 in
+    if c = 0 then 0 else x_sign*x_lvl
+  in
+  let fy c =
+    let y_sign = if c / 2 mod 2 == 0 then 1 else -1 in
+    let y_lvl = if c mod 2 = 0 then 0 else c/4 + 1 in
+    y_sign*y_lvl
+  in
+  fun (x,y) c -> nth_offset (fx c) +. x, nth_offset (fy c) +. y
 
 let solve p =
   let insts = List.sort_uniq compare @@ Array.to_list p.musicians in
@@ -43,14 +56,14 @@ let solve p =
   in
 
   let snakes = Hashtbl.create 1 in
-  h_centers |> Hashtbl.iter (fun inst xy -> Hashtbl.add snakes inst (gen_snake xy));
+  h_centers |> Hashtbl.iter (fun inst xy -> Hashtbl.add snakes inst (gen_cross xy));
 
   p.musicians |> Array.iter begin fun inst ->
     let snake = Hashtbl.find snakes inst in
 
     let rec loop () =
       let c = CC.count counter inst in
-      let (coord_x,coord_y) = snake () in
+      let (coord_x,coord_y) = snake c in
 
       assert (c < 20000);
 
