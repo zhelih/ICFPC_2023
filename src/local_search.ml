@@ -28,8 +28,10 @@ let rec_run p placements score0 =
     try1 (x+.step) (y-.step);
     try1 (x+.step) (y+.step);
 
-    if not !changed && i < Array.length placements - 1 then
+    if not !changed && i < Array.length placements - 1 then begin
+      placements.(i) <- (x, y);
       loop (i+1)
+    end
   in
   loop 0;
   !changed, !new_score
