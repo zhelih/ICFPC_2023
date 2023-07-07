@@ -26,8 +26,6 @@ let almost_optimal_musician inst p =
   let x_star = sum_ai_ti /. sum_ti in
   let y_star = sum_bi_ti /. sum_ti in
 
-  printfn "sum ti %f X STAR %f Y STAR %f" sum_ti x_star y_star;
-
   (* place inside of the stage +- 10 *)
   let stage_x_min = 10. +. (List.nth p.stage_bottom_left 0) in
   let stage_x_max = -10. +. (List.nth p.stage_bottom_left 0) +. p.stage_width in
