@@ -23,7 +23,7 @@ let () =
     for i = 0 to Problem.total do
       if nums = [] || List.mem i nums then
       begin
-        printfn "%d) %g" i (Solution.score (Problem.parse i) (Solution.parse i))
+        printfn "%d) %10.0f" i (Solution.score (Problem.parse i) (Solution.parse i))
       end
     done
   | "draw"::i::[] ->

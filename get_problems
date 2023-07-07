@@ -1,4 +1,4 @@
 for i in {1..45}; do
-  curl -H "Bearer: $(cat token)" https://api.icfpcontest.com/problem?problem_id=$i | jq -r .Success > problem/$i &
+  curl https://api.icfpcontest.com/problem?problem_id=$i | jq -r .Success > problem/$i &
 done;
 wait
