@@ -1,11 +1,13 @@
 open Devkit
 open Problem_t
 
+let int = int_of_string
+
 let () =
   match Nix.args with
   | "stats"::nums ->
     printfn "ID\tAtt\tMus\tNeg\tZero";
-    let nums = List.map int_of_string nums in
+    let nums = List.map int nums in
     for i = 0 to Problem.total do
       if nums = [] || List.mem i nums then
       begin
@@ -16,15 +18,24 @@ let () =
       end
     done
   | "draw"::i::[] ->
-    let p = Problem.parse @@ int_of_string i in
+    let p = Problem.parse @@ int i in
     printfn "digraph problem_%s {" i;
-    printfn "node [margin=0 fontcolor=black fontsize=32 width=5 shape=circle style=filled fillcolor=blue]";
-    printfn "stage [shape=box fillcolor=gray pin=true pos=\"%g,%g\" width=%g height=%g]"
+    printfn "node [margin=0 fontcolor=black fontsize=32 style=filled pin=true]";
+    printfn "stage [shape=box fillcolor=gray pos=\"%g,%g\" width=%g height=%g]"
       (Problem.stage_center_x p) (Problem.stage_center_y p) p.stage_width p.stage_height;
+    begin match Solution.parse @@ int i with
+    | exception Sys_error _ -> () (* no solution *)
+    | s ->
+      printfn "node [shape=circle fillcolor=red width=10]";
+      s.placements |> List.iteri begin fun i (p:placement) ->
+        printfn "m%d [pin=true pos=\"%g,%g\"]" i p.x p.y
+      end
+    end;
+    printfn "node [shape=circle fillcolor=blue width=10]";
     p.attendees |> List.iteri begin fun i a ->
-      printfn "%d [pin=true pos=\"%g,%g\"]" i a.x a.y;
+      printfn "a%d [pin=true pos=\"%g,%g\"]" i a.x a.y;
     end;
     printfn "}"
   | "solve"::i::[] ->
-    Solver.solve @@ Problem.parse @@ int_of_string i
+    Solver.solve @@ Problem.parse @@ int i
   | _ -> printfn "so what?"

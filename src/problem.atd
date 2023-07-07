@@ -8,3 +8,5 @@ type problem = {
   musicians : int list <ocaml repr="array">;
   attendees: attendee list;
 }
+type placement = { x : float; y : float; }
+type solution = { placements : placement list }

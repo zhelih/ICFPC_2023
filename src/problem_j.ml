@@ -1,6 +1,10 @@
 (* Auto-generated from "problem.atd" *)
 [@@@ocaml.warning "-27-32-33-35-39"]
 
+type placement = Problem_t.placement = { x: float; y: float }
+
+type solution = Problem_t.solution = { placements: placement list }
+
 type attendee = Problem_t.attendee = {
   x: float;
   y: float;
@@ -17,6 +21,263 @@ type problem = Problem_t.problem = {
   attendees: attendee list
 }
 
+let write_placement : _ -> placement -> _ = (
+  fun ob (x : placement) ->
+    Buffer.add_char ob '{';
+    let is_first = ref true in
+    if !is_first then
+      is_first := false
+    else
+      Buffer.add_char ob ',';
+      Buffer.add_string ob "\"x\":";
+    (
+      Yojson.Safe.write_std_float
+    )
+      ob x.x;
+    if !is_first then
+      is_first := false
+    else
+      Buffer.add_char ob ',';
+      Buffer.add_string ob "\"y\":";
+    (
+      Yojson.Safe.write_std_float
+    )
+      ob x.y;
+    Buffer.add_char ob '}';
+)
+let string_of_placement ?(len = 1024) x =
+  let ob = Buffer.create len in
+  write_placement ob x;
+  Buffer.contents ob
+let read_placement = (
+  fun p lb ->
+    Yojson.Safe.read_space p lb;
+    Yojson.Safe.read_lcurl p lb;
+    let field_x = ref (None) in
+    let field_y = ref (None) in
+    try
+      Yojson.Safe.read_space p lb;
+      Yojson.Safe.read_object_end lb;
+      Yojson.Safe.read_space p lb;
+      let f =
+        fun s pos len ->
+          if pos < 0 || len < 0 || pos + len > String.length s then
+            invalid_arg (Printf.sprintf "out-of-bounds substring position or length: string = %S, requested position = %i, requested length = %i" s pos len);
+          if len = 1 then (
+            match String.unsafe_get s pos with
+              | 'x' -> (
+                  0
+                )
+              | 'y' -> (
+                  1
+                )
+              | _ -> (
+                  -1
+                )
+          )
+          else (
+            -1
+          )
+      in
+      let i = Yojson.Safe.map_ident p f lb in
+      Atdgen_runtime.Oj_run.read_until_field_value p lb;
+      (
+        match i with
+          | 0 ->
+            field_x := (
+              Some (
+                (
+                  Atdgen_runtime.Oj_run.read_number
+                ) p lb
+              )
+            );
+          | 1 ->
+            field_y := (
+              Some (
+                (
+                  Atdgen_runtime.Oj_run.read_number
+                ) p lb
+              )
+            );
+          | _ -> (
+              Yojson.Safe.skip_json p lb
+            )
+      );
+      while true do
+        Yojson.Safe.read_space p lb;
+        Yojson.Safe.read_object_sep p lb;
+        Yojson.Safe.read_space p lb;
+        let f =
+          fun s pos len ->
+            if pos < 0 || len < 0 || pos + len > String.length s then
+              invalid_arg (Printf.sprintf "out-of-bounds substring position or length: string = %S, requested position = %i, requested length = %i" s pos len);
+            if len = 1 then (
+              match String.unsafe_get s pos with
+                | 'x' -> (
+                    0
+                  )
+                | 'y' -> (
+                    1
+                  )
+                | _ -> (
+                    -1
+                  )
+            )
+            else (
+              -1
+            )
+        in
+        let i = Yojson.Safe.map_ident p f lb in
+        Atdgen_runtime.Oj_run.read_until_field_value p lb;
+        (
+          match i with
+            | 0 ->
+              field_x := (
+                Some (
+                  (
+                    Atdgen_runtime.Oj_run.read_number
+                  ) p lb
+                )
+              );
+            | 1 ->
+              field_y := (
+                Some (
+                  (
+                    Atdgen_runtime.Oj_run.read_number
+                  ) p lb
+                )
+              );
+            | _ -> (
+                Yojson.Safe.skip_json p lb
+              )
+        );
+      done;
+      assert false;
+    with Yojson.End_of_object -> (
+        (
+          {
+            x = (match !field_x with Some x -> x | None -> Atdgen_runtime.Oj_run.missing_field p "x");
+            y = (match !field_y with Some x -> x | None -> Atdgen_runtime.Oj_run.missing_field p "y");
+          }
+         : placement)
+      )
+)
+let placement_of_string s =
+  read_placement (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
+let write__placement_list = (
+  Atdgen_runtime.Oj_run.write_list (
+    write_placement
+  )
+)
+let string_of__placement_list ?(len = 1024) x =
+  let ob = Buffer.create len in
+  write__placement_list ob x;
+  Buffer.contents ob
+let read__placement_list = (
+  Atdgen_runtime.Oj_run.read_list (
+    read_placement
+  )
+)
+let _placement_list_of_string s =
+  read__placement_list (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
+let write_solution : _ -> solution -> _ = (
+  fun ob (x : solution) ->
+    Buffer.add_char ob '{';
+    let is_first = ref true in
+    if !is_first then
+      is_first := false
+    else
+      Buffer.add_char ob ',';
+      Buffer.add_string ob "\"placements\":";
+    (
+      write__placement_list
+    )
+      ob x.placements;
+    Buffer.add_char ob '}';
+)
+let string_of_solution ?(len = 1024) x =
+  let ob = Buffer.create len in
+  write_solution ob x;
+  Buffer.contents ob
+let read_solution = (
+  fun p lb ->
+    Yojson.Safe.read_space p lb;
+    Yojson.Safe.read_lcurl p lb;
+    let field_placements = ref (None) in
+    try
+      Yojson.Safe.read_space p lb;
+      Yojson.Safe.read_object_end lb;
+      Yojson.Safe.read_space p lb;
+      let f =
+        fun s pos len ->
+          if pos < 0 || len < 0 || pos + len > String.length s then
+            invalid_arg (Printf.sprintf "out-of-bounds substring position or length: string = %S, requested position = %i, requested length = %i" s pos len);
+          if len = 10 && String.unsafe_get s pos = 'p' && String.unsafe_get s (pos+1) = 'l' && String.unsafe_get s (pos+2) = 'a' && String.unsafe_get s (pos+3) = 'c' && String.unsafe_get s (pos+4) = 'e' && String.unsafe_get s (pos+5) = 'm' && String.unsafe_get s (pos+6) = 'e' && String.unsafe_get s (pos+7) = 'n' && String.unsafe_get s (pos+8) = 't' && String.unsafe_get s (pos+9) = 's' then (
+            0
+          )
+          else (
+            -1
+          )
+      in
+      let i = Yojson.Safe.map_ident p f lb in
+      Atdgen_runtime.Oj_run.read_until_field_value p lb;
+      (
+        match i with
+          | 0 ->
+            field_placements := (
+              Some (
+                (
+                  read__placement_list
+                ) p lb
+              )
+            );
+          | _ -> (
+              Yojson.Safe.skip_json p lb
+            )
+      );
+      while true do
+        Yojson.Safe.read_space p lb;
+        Yojson.Safe.read_object_sep p lb;
+        Yojson.Safe.read_space p lb;
+        let f =
+          fun s pos len ->
+            if pos < 0 || len < 0 || pos + len > String.length s then
+              invalid_arg (Printf.sprintf "out-of-bounds substring position or length: string = %S, requested position = %i, requested length = %i" s pos len);
+            if len = 10 && String.unsafe_get s pos = 'p' && String.unsafe_get s (pos+1) = 'l' && String.unsafe_get s (pos+2) = 'a' && String.unsafe_get s (pos+3) = 'c' && String.unsafe_get s (pos+4) = 'e' && String.unsafe_get s (pos+5) = 'm' && String.unsafe_get s (pos+6) = 'e' && String.unsafe_get s (pos+7) = 'n' && String.unsafe_get s (pos+8) = 't' && String.unsafe_get s (pos+9) = 's' then (
+              0
+            )
+            else (
+              -1
+            )
+        in
+        let i = Yojson.Safe.map_ident p f lb in
+        Atdgen_runtime.Oj_run.read_until_field_value p lb;
+        (
+          match i with
+            | 0 ->
+              field_placements := (
+                Some (
+                  (
+                    read__placement_list
+                  ) p lb
+                )
+              );
+            | _ -> (
+                Yojson.Safe.skip_json p lb
+              )
+        );
+      done;
+      assert false;
+    with Yojson.End_of_object -> (
+        (
+          {
+            placements = (match !field_placements with Some x -> x | None -> Atdgen_runtime.Oj_run.missing_field p "placements");
+          }
+         : solution)
+      )
+)
+let solution_of_string s =
+  read_solution (Yojson.Safe.init_lexer ()) (Lexing.from_string s)
 let write__x_adbef7e = (
   Atdgen_runtime.Oj_run.write_array (
     Yojson.Safe.write_std_float
