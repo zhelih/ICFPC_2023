@@ -43,6 +43,8 @@ let solve p =
       let coord_x = float (offset * (fx c)) +. center_x in
       let coord_y = float (offset * (fy c)) +. center_y in
 
+      assert (c < 10000);
+
       printfn "inst %d CC %d X %f Y %f" inst  c coord_x coord_y;
 
       CC.plus counter inst 1;
