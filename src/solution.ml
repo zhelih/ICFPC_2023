@@ -71,5 +71,30 @@ let calc_score p coords =
     acc
   end 0.
 
+let calc_score_blocked_stats p coords =
+  assert (Array.length coords = Array.length p.musicians);
+  let val_block_on = ref 0. in
+  let val_block_off = ref 0. in
+  let val_block_pos = ref 0. in
+  let val_block_neg = ref 0. in
+  let res = p.attendees
+  |> List.fold_left begin fun acc a ->
+    coords |> CCArray.foldi begin fun acc i m ->
+      let am_i_blocked = coords |> Array.exists (fun mm -> mm != m && is_blocked m (a.x,a.y) mm) in
+      let d2 = sqr (a.x -. fst m) +. sqr (a.y -. snd m) in
+      let pr = Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2) in
+      val_block_off := !val_block_off +. pr;
+      if am_i_blocked then begin
+        if pr > 0. then val_block_pos := !val_block_pos +. pr else val_block_neg := !val_block_neg +. pr;
+      end else val_block_on := !val_block_on +. pr;
+      if am_i_blocked then acc else acc +. pr
+    end
+    acc
+  end 0. in
+  printfn "SMART BLOCKER SOLUTION SCORE";
+  printfn "BLOCK OFF\tBLOCK ON\tBLOCK +\tBLOCK -";
+  printfn "%s\t%s\t%s\t%s" (show_score !val_block_off) (show_score !val_block_on) (show_score !val_block_pos) (show_score !val_block_neg);
+  res
+
 let score p s =
-  calc_score p (List.map pt s.placements |> Array.of_list)
+  calc_score_blocked_stats p (List.map pt s.placements |> Array.of_list)
