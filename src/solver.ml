@@ -79,8 +79,3 @@ let solve p =
     loop ()
   end;
   DynArray.to_list res
-
-let solve_with_ls p =
-  let sol = solve p in
-  let _ = Local_search.run p sol in
-  sol

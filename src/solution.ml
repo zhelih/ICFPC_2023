@@ -10,6 +10,8 @@ let make p l =
 
 let save i s = Std.output_file ~filename:(path i) ~text:(Problem_j.string_of_solution s)
 
+let show_score f = sprintf "%#d" (int_of_float f)
+
 let sqr x = x *. x
 
 module FOP = struct
