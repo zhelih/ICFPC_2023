@@ -1,0 +1,2 @@
+make
+(for i in {0..55}; do cd src && _build/default/main.exe score "$1" $i & done; wait) | sort -n > solution.$1/score.txt
