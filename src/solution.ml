@@ -40,10 +40,11 @@ let is_blocked (x1,y1) (x2,y2) (x0,y0) =
 
     let lhs = b*.b in
     let rhs = (2.*.a +. b)*.(2.*.a +. b) in
-    ( (lhs <= det) && (det <= rhs) ) || ( (lhs >= det) && (det >= rhs) )
-    (*let t1 = (-.b +. (Float.sqrt det)) /. (2.*.a) in
+    ( (det >= 0.) && (lhs <= det) && (det <= rhs) ) || ( (lhs >= det) && (det >= rhs) )
+    (*
+    let t1 = (-.b +. (Float.sqrt det)) /. (2.*.a) in
     let t2 = (-.b -. (Float.sqrt det)) /. (2.*.a) in
-    ( (t1 >= 0.) && (t1 <= 1.) ) || ( (t2 >= 0.) && (t2 <= 1.) )*)
+    ( (t1 >= 0.) && (t1 <= 1.) ) || ( (t2 >= 0.) && (t2 <= 1.) ) *)
   end
 
 let calc_score p coords =
