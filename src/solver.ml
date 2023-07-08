@@ -84,6 +84,24 @@ let solve interrupt gen p =
 
 let taste_sum p inst = p.attendees |> List.fold_left (fun acc a -> a.tastes.(inst) +. acc) 0.
 
+let solve8 _interrupt p =
+  let x = Problem.stage_x p +. p.stage_width in
+  let l = ref [] in
+  let n = ref (Array.length p.musicians) in
+  for ix = 3 to int_of_float (p.stage_width /. 10.) do
+    let cx = x -. nth_offset ix in
+    let cy = Problem.stage_y p +. p.stage_height -. 10. in
+    if !n > 0 && Numeric.inside cx cy p then (decr n; tuck l (cx,cy))
+  done;
+  for ix = 1 to 2 do
+    for iy = int_of_float (p.stage_height /. 10.) downto 0 do
+      let cx = x -. nth_offset ix in
+      let cy = Problem.stage_y p +. nth_offset iy in
+      if !n > 0 && Numeric.inside cx cy p then (decr n; tuck l (cx,cy))
+    done
+  done;
+  !l
+
 let solve14 _interrupt p =
   match Array.to_list p.musicians with
   | _good::bad ->
@@ -120,7 +138,10 @@ let solve14 _interrupt p =
   | [] -> assert false
 
 let solve problem interrupt p =
-  if problem = 14 then solve14 interrupt p else
+  match problem with
+  | 8 -> solve8 interrupt p
+  | 14 -> solve14 interrupt p
+  | _ ->
   let best = ref [] in
   let best_score = ref 0. in
   while !offset <= 20. && not !interrupt do

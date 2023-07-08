@@ -47,7 +47,7 @@ let () =
     let interrupt = ref false in
     Signal.replace [Sys.sigterm;Sys.sigint] (fun _ -> interrupt := true);
     let sol = Solver.solve (int i) interrupt p in
-    let sol = if i <> "14" then Local_search.run interrupt (int i) p sol else sol in
+    let sol = if i <> "14" && i <> "8" then Local_search.run interrupt (int i) p sol else sol in
     let s = Solution.make p sol in
     printfn "solution %s score %s" i Solution.(show_score @@ score p s);
     Solution.save suffix (int_of_string i) s
