@@ -91,11 +91,13 @@ let solve interrupt p =
     offset := !offset +. 0.1
   done;
   offset := 10.;
+  begin try
   while !offset < 20. && not !interrupt do
     let q = solve interrupt gen_cross p in
     let score = Solution.calc_score p (Array.of_list q) in
     if score > !best_score || !best = [] then begin best_score := score; best := q end;
     offset := !offset +. 0.1
   done;
+  with exn -> printfn "cross pososal %s" (Exn.str exn) end;
   if !best = [] then failwith "found nothing";
   !best
