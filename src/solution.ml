@@ -9,7 +9,7 @@ let make p l =
   { placements = List.map (fun (x,y) -> { x; y }) l; }
 
 let save suffix i s =
-(*   begin try Sys.mkdir (Filename.dirname @@ path suffix i) 0o755 with _ -> () end; *)
+  begin try Sys.mkdir (Filename.dirname @@ path suffix i) 0o755 with _ -> () end;
   Std.output_file ~filename:(path suffix i) ~text:(Problem_j.string_of_solution s)
 
 let show_score f = sprintf "%#d" (int_of_float f)
