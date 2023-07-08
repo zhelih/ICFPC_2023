@@ -1,1 +1,2 @@
-for i in {0..45}; do echo solving $i; ./run solve $i; done
+make
+for i in {0..45}; do echo solving $i; cd src && _build/default/main.exe solve $i & done; wait
