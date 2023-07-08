@@ -43,6 +43,14 @@ let is_blocked (x1,y1) (x2,y2) (x0,y0) =
     ( (t1 >= 0.) && (t1 <= 1.) ) || ( (t2 >= 0.) && (t2 <= 1.) )
   end
 
+let h_blocked_cache = Hashtbl.create 1
+
+let is_blocked_cached (x1,y1) (x2,y2) (x0,y0) =
+  let key = (Int64.bits_of_float x1, Int64.bits_of_float y1, Int64.bits_of_float x2, Int64.bits_of_float y2, Int64.bits_of_float x0, Int64.bits_of_float y0) in
+  match Hashtbl.find_opt h_blocked_cache key with
+  | None -> let v = is_blocked (x1,y1) (x2,y2) (x0,y0) in Hashtbl.add h_blocked_cache key v; v
+  | Some v -> v
+
 let calc_score p coords =
   assert (Array.length coords = Array.length p.musicians);
   p.attendees
