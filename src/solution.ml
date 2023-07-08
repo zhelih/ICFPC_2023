@@ -47,7 +47,7 @@ let calc_score p coords =
   p.attendees
   |> List.map begin fun a ->
     coords |> Array.mapi (fun i m ->
-      if coords |> Array.exists (fun mm -> mm <> m && is_blocked m (a.x,a.y) mm) then
+      if coords |> Array.exists (fun mm -> mm != m && is_blocked m (a.x,a.y) mm) then
         0.
       else
         let d2 = sqr (a.x -. fst m) +. sqr (a.y -. snd m) in
