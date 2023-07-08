@@ -44,7 +44,7 @@ let run interrupt problem p placements =
     let c, nsc = rec_run interrupt p placements sc0 in
     if c then (
       if i mod 100 = 0 then printfn "problem %d Local Search : score = %s" problem (Solution.show_score nsc);
-      if i < 20_000 then loop (i+1) nsc
+      if i < 20_000 && not !interrupt then loop (i+1) nsc
     )
   in
   loop 0 score0;

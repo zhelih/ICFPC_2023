@@ -45,8 +45,8 @@ let () =
   | "solve"::suffix::i::[] ->
     let p = Problem.parse @@ int i in
     let interrupt = ref false in
-    let sol = Solver.solve p in
     Signal.replace [Sys.sigterm;Sys.sigint] (fun _ -> interrupt := true);
+    let sol = Solver.solve interrupt p in
     let coords = Local_search.run interrupt (int i) p sol in
     let s = Solution.make p coords in
     printfn "solution %s score %s" i Solution.(show_score @@ score p s);

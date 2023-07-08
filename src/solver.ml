@@ -36,7 +36,7 @@ let gen_cross =
   in
   fun (x,y) c -> nth_offset (fx c) +. x, nth_offset (fy c) +. y
 
-let solve p =
+let solve interrupt p =
   let insts = List.sort_uniq compare @@ Array.to_list p.musicians in
   let h_centers = Hashtbl.create 1 in
   List.iter (fun inst ->
@@ -60,6 +60,7 @@ let solve p =
 
   p.musicians |> Array.iter begin fun inst ->
     let snake = Hashtbl.find snakes inst in
+    if !interrupt then failwith "interrupted";
 
     let rec loop () =
       let c = CC.count counter inst in
