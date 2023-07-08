@@ -1,14 +1,16 @@
 open Printf
 open Problem_t
 
-let path i = sprintf "../solution/%d" i
-let parse i = Problem_j.solution_of_string @@ Std.input_file @@ path i
+let path suffix i = sprintf "../solution.%s/%d" suffix i
+let parse suffix i = Problem_j.solution_of_string @@ Std.input_file @@ path suffix i
 
 let make p l =
   assert (Array.length p.musicians = List.length l);
   { placements = List.map (fun (x,y) -> { x; y }) l; }
 
-let save i s = Std.output_file ~filename:(path i) ~text:(Problem_j.string_of_solution s)
+let save suffix i s =
+(*   begin try Sys.mkdir (Filename.dirname @@ path suffix i) 0o755 with _ -> () end; *)
+  Std.output_file ~filename:(path suffix i) ~text:(Problem_j.string_of_solution s)
 
 let show_score f = sprintf "%#d" (int_of_float f)
 

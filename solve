@@ -1,2 +1,4 @@
 make
-for i in {1..55}; do echo solving $i; cd src && _build/default/main.exe solve $i & done; wait
+suffix=${1:-$(date +%H%M)}
+mkdir solution.$suffix
+for i in {0..55}; do echo solving $i; cd src && _build/default/main.exe solve "$suffix" $i & done; wait

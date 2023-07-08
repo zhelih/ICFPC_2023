@@ -18,18 +18,18 @@ let () =
         printfn "%d\t%d\t%d\t%d\t%b\t%b" i (List.length p.attendees) (Array.length p.musicians) (Array.length is) has_neg has_zero
       end
     done
-  | "score"::nums ->
+  | "score"::suffix::nums ->
     let nums = List.map int nums in
     for i = 0 to Problem.total do
-      if nums = [] || List.mem i nums then printfn "%d) %s" i Solution.(show_score @@ score (Problem.parse i) (Solution.parse i))
+      if nums = [] || List.mem i nums then printfn "%d) %s" i Solution.(show_score @@ score (Problem.parse i) (Solution.parse suffix i))
     done
-  | "draw"::i::[] ->
+  | "draw"::suffix::i::[] ->
     let p = Problem.parse @@ int i in
     printfn "digraph problem_%s {" i;
     printfn "node [margin=0 fontcolor=black fontsize=32 style=filled pin=true]";
     printfn "stage [shape=box fillcolor=gray pos=\"%g,%g\" width=%g height=%g]"
       (Problem.stage_center_x p) (Problem.stage_center_y p) p.stage_width p.stage_height;
-    begin match Solution.parse @@ int i with
+    begin match Solution.parse suffix @@ int i with
     | exception Sys_error _ -> () (* no solution *)
     | s ->
       printfn "node [shape=circle fillcolor=red width=10]";
@@ -42,7 +42,7 @@ let () =
       printfn "a%d [pin=true pos=\"%g,%g\"]" i a.x a.y;
     end;
     printfn "}"
-  | "solve"::i::[] ->
+  | "solve"::suffix::i::[] ->
     let p = Problem.parse @@ int i in
     let interrupt = ref false in
     let sol = Solver.solve p in
@@ -50,5 +50,5 @@ let () =
     let coords = Local_search.run interrupt (int i) p sol in
     let s = Solution.make p coords in
     printfn "solution %s score %s" i Solution.(show_score @@ score p s);
-    Solution.save (int_of_string i) s
+    Solution.save suffix (int_of_string i) s
   | _ -> printfn "so what?"
