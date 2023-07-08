@@ -3,9 +3,9 @@ open Problem_t
 
 module CC = Cache.Count
 
-let offset = 15.
+let offset = ref 10.
 
-let nth_offset n = float_of_int n *. offset
+let nth_offset n = float_of_int n *. !offset
 
 let gen_snake (x,y) =
   let l = ref [x,y] in
@@ -80,3 +80,15 @@ let solve interrupt p =
     loop ()
   end;
   DynArray.to_list res
+
+let solve interrupt p =
+  let best = ref [] in
+  let best_score = ref 0. in
+  while !offset < 20. && not !interrupt do
+    let q = solve interrupt p in
+    let score = Solution.calc_score p (Array.of_list q) in
+    if score > !best_score then begin best_score := score; best := q end;
+    offset := !offset +. 0.1
+  done;
+  if !best = [] then failwith "found nothing";
+  !best
