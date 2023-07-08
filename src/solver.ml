@@ -87,7 +87,7 @@ let solve interrupt p =
   while !offset < 20. && not !interrupt do
     let q = solve interrupt p in
     let score = Solution.calc_score p (Array.of_list q) in
-    if score > !best_score then begin best_score := score; best := q end;
+    if score > !best_score || !best = [] then begin best_score := score; best := q end;
     offset := !offset +. 0.1
   done;
   if !best = [] then failwith "found nothing";
