@@ -45,16 +45,15 @@ let is_blocked (x1,y1) (x2,y2) (x0,y0) =
 let calc_score p coords =
   assert (Array.length coords = Array.length p.musicians);
   p.attendees
-  |> List.map begin fun a ->
-    coords |> Array.mapi (fun i m ->
+  |> List.fold_left begin fun acc a ->
+    coords |> CCArray.foldi begin fun acc i m ->
       if coords |> Array.exists (fun mm -> mm != m && is_blocked m (a.x,a.y) mm) then
-        0.
+        acc
       else
         let d2 = sqr (a.x -. fst m) +. sqr (a.y -. snd m) in
-        Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2))
-    |> Array.fold_left (+.) 0.
-  end
-  |> List.fold_left (+.) 0.
+        acc +. Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2)
+    end acc
+  end 0.
 
 let score p s =
   calc_score p (List.map pt s.placements |> Array.of_list)

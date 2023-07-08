@@ -2,5 +2,5 @@
 
 (executable
   (name main)
-  (libraries devkit extlib atdgen-runtime)
+  (libraries devkit extlib atdgen-runtime containers)
 )
