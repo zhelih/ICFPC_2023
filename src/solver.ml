@@ -16,8 +16,9 @@ let gen_snake (x,y) =
       let m = nth_offset !margin in
       let sx = x -. m in
       let sy = y -. m in
-      for i = 0 to !margin * 2 + 1 do let ix = sx +. nth_offset i in tuck l (ix,y-.m); tuck l (ix,y+.m) done;
-      for i = 0 to !margin * 2 - 1 do let iy = sy +. nth_offset (i+1) in tuck l (x-.m,iy); tuck l (x+.m,iy) done;
+      l := [];
+      for i = 0 to !margin * 2 do let ix = sx +. nth_offset i in tuck l (ix,y-.m); tuck l (ix,y+.m) done;
+      for i = 1 to !margin * 2 - 1 do let iy = sy +. nth_offset i in tuck l (x-.m,iy); tuck l (x+.m,iy) done;
       incr margin;
       t
     | t::ts -> l := ts; t
@@ -83,19 +84,39 @@ let solve interrupt gen p =
 
 let taste_sum p inst = p.attendees |> List.fold_left (fun acc a -> a.tastes.(inst) +. acc) 0.
 
-let solve14 interrupt p =
+let solve14 _interrupt p =
   match Array.to_list p.musicians with
-  | good::bad ->
-    let sol = solve interrupt gen_snake { p with musicians = [| good |] } in
-    let inst = Problem.instruments p |> Array.mapi (fun i _ -> taste_sum p i, i) in
-    Array.sort Stdlib.compare inst;
-(*     inst |> Array.iter (fun (sum,i) -> printfn "%f %d" sum i); *)
+  | _good::bad ->
+(*     let sol = solve interrupt gen_snake { p with musicians = [| good |] } in *)
+(*     let taste_sums = Problem.instruments p |> Array.mapi (fun i _ -> taste_sum p i) in *)
     let stage = 718.,487. in
     let snake = gen_snake stage in
-    let bad = bad |> List.mapi (fun i _ -> snake i) |> Array.of_list in
+(*     let bad_pos = bad |> List.mapi (fun i inst -> (taste_sums.(inst), i, inst)) |> List.sort Stdlib.compare in *)
+    let bad = bad |> List.mapi (fun i _ -> snake i) in
+(*
     let bad' = Array.make (Array.length bad) (0.,0.) in
-    inst |> Array.iteri (fun i (_,j) -> if i <> Array.length inst -1 then bad'.(i) <- bad.(j));
-    sol @ Array.to_list bad'
+    bad_pos |> List.iteri (fun i (_,j,_) -> bad'.(i) <- bad.(j));
+*)
+  let check_good x y =
+      not @@ List.exists (fun (a,b) -> (x -. a)** 2. +. (y -. b)**2. <= 100.) bad
+  in
+    let x = Problem.stage_x p +. 10. in
+    let y = Problem.stage_y p +. 10. in
+    let dx= ref 0. in let dy = ref 0. in
+    let best_score = ref 0. in
+    let best = ref [] in
+    while !dx < p.stage_width && !dy < p.stage_height do
+      if !dx >= p.stage_width then (dx := 0.; dy := !dy +. 10.);
+      if check_good (x +. !dx) (y +. !dy) && Numeric.inside (x+. !dx) (y +. !dy) p then
+        begin
+      let sol = ((x +. !dx, y +. !dy) :: bad) in
+      let score = Solution.calc_score p (Array.of_list sol) in
+(*       printfn "score %s" (Solution.show_score score); *)
+      if score > !best_score || !best = [] then begin best_score := score; best := sol end;
+      end;
+      dx := !dx +. 10.;
+    done;
+    !best
   | [] -> assert false
 
 let solve problem interrupt p =
