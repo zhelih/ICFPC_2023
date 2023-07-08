@@ -2,7 +2,7 @@ open Devkit
 
 let step = 0.01
 
-let rec_run p placements score0 =
+let rec_run interrupt p placements score0 =
 
   let new_score = ref score0 in
   let changed = ref false in
@@ -28,7 +28,7 @@ let rec_run p placements score0 =
     try1 (x+.step) (y-.step);
     try1 (x+.step) (y+.step);
 
-    if not !changed && i < Array.length placements - 1 then begin
+    if not !interrupt && not !changed && i < Array.length placements - 1 then begin
       placements.(i) <- (x, y);
       loop (i+1)
     end
@@ -36,12 +36,12 @@ let rec_run p placements score0 =
   loop 0;
   !changed, !new_score
 
-let run problem p placements =
+let run interrupt problem p placements =
   let placements = Array.of_list placements in
   let score0 = Solution.calc_score p placements in
   printfn "problem %d Starting local search step = %f, score = %s" problem step (Solution.show_score score0);
   let rec loop i sc0 =
-    let c, nsc = rec_run p placements sc0 in
+    let c, nsc = rec_run interrupt p placements sc0 in
     if c then (
       if i mod 100 = 0 then printfn "problem %d Local Search : score = %s" problem (Solution.show_score nsc);
       if i < 20_000 then loop (i+1) nsc
