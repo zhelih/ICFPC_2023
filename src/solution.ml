@@ -1,5 +1,8 @@
 open Printf
+open Devkit
 open Problem_t
+
+let verbose = false
 
 let path suffix i = sprintf "../solution.%s/%d" suffix i
 let parse suffix i = Problem_j.solution_of_string @@ Std.input_file @@ path suffix i
@@ -58,10 +61,14 @@ let calc_score p coords =
     coords |> CCArray.foldi begin fun acc i m ->
       if coords |> Array.exists (fun mm -> mm != m && is_blocked m (a.x,a.y) mm) then
         acc
-      else
+      else begin
         let d2 = sqr (a.x -. fst m) +. sqr (a.y -. snd m) in
-        acc +. Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2)
-    end acc
+        let pr = Float.ceil (1_000_000. *. a.tastes.(p.musicians.(i)) /. d2) in
+        if verbose then printfn "%f\t(%f,%f)\t%d" pr a.x a.y i;
+        acc +. pr
+      end
+    end
+    acc
   end 0.
 
 let score p s =
