@@ -36,7 +36,7 @@ let gen_cross =
   in
   fun (x,y) c -> nth_offset (fx c) +. x, nth_offset (fy c) +. y
 
-let solve interrupt p =
+let solve interrupt gen p =
   let insts = List.sort_uniq compare @@ Array.to_list p.musicians in
   let h_centers = Hashtbl.create 1 in
   List.iter (fun inst ->
@@ -56,7 +56,7 @@ let solve interrupt p =
   in
 
   let snakes = Hashtbl.create 1 in
-  h_centers |> Hashtbl.iter (fun inst xy -> Hashtbl.add snakes inst (gen_snake xy));
+  h_centers |> Hashtbl.iter (fun inst xy -> Hashtbl.add snakes inst (gen xy));
 
   p.musicians |> Array.iter begin fun inst ->
     let snake = Hashtbl.find snakes inst in
@@ -85,7 +85,14 @@ let solve interrupt p =
   let best = ref [] in
   let best_score = ref 0. in
   while !offset < 20. && not !interrupt do
-    let q = solve interrupt p in
+    let q = solve interrupt gen_snake p in
+    let score = Solution.calc_score p (Array.of_list q) in
+    if score > !best_score || !best = [] then begin best_score := score; best := q end;
+    offset := !offset +. 0.1
+  done;
+  offset := 10.;
+  while !offset < 20. && not !interrupt do
+    let q = solve interrupt gen_cross p in
     let score = Solution.calc_score p (Array.of_list q) in
     if score > !best_score || !best = [] then begin best_score := score; best := q end;
     offset := !offset +. 0.1
