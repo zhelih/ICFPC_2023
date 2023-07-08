@@ -1,4 +1,4 @@
-for i in {1..45}; do
+for i in {1..55}; do
   curl https://api.icfpcontest.com/problem?problem_id=$i | jq -r .Success > problem/$i &
 done;
 wait
