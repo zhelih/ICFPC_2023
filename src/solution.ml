@@ -97,7 +97,7 @@ let calc_score_blocked_stats p coords =
     acc
   end 0. in
   printfn "SMART BLOCKER SOLUTION SCORE";
-  printfn "%15s\t%15s\t%15s\t%15s\t%15s\t%15s" "BLOCK OFF" "BLOCK ON" "BLOCK+" "BLOCK-" "BLOCK OFF NEG" "BLOCK ON NEG";
+  printfn "%15s\t%15s\t%15s\t%15s\t%15s\t%15s" "BLOCK OFF" "BLOCK ON" "BLOCK ON +" "BLOCK ON -" "BLOCK OFF POS" "BLOCK OFF NEG";
   printfn "%15s\t%15s\t%15s\t%15s\t%15s\t%15s" (show_score !val_block_off) (show_score !val_block_on) (show_score !val_block_pos) (show_score !val_block_neg) (show_score !val_block_off_pos) (show_score !val_block_off_neg);
   res
 

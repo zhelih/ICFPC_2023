@@ -51,7 +51,7 @@ let solve interrupt gen p =
 
   let check_good x y =
     try
-      let _ = DynArray.index_of (fun (a,b) -> (x -. a)** 2. +. (y -. b)**2. <= 100.) res in
+      let _ = DynArray.index_of (fun (a,b) -> (x -. a)** 2. +. (y -. b)**2. < 100.) res in
       false
     with Not_found -> true
   in
@@ -123,7 +123,7 @@ let solve problem interrupt p =
   if problem = 14 then solve14 interrupt p else
   let best = ref [] in
   let best_score = ref 0. in
-  while !offset < 20. && not !interrupt do
+  while !offset <= 20. && not !interrupt do
     let q = solve interrupt gen_snake p in
     let score = Solution.calc_score p (Array.of_list q) in
     if score > !best_score || !best = [] then begin best_score := score; best := q end;
@@ -131,7 +131,7 @@ let solve problem interrupt p =
   done;
   offset := 10.;
   begin try
-  while !offset < 20. && not !interrupt do
+  while !offset <= 20. && not !interrupt do
     let q = solve interrupt gen_cross p in
     let score = Solution.calc_score p (Array.of_list q) in
     if score > !best_score || !best = [] then begin best_score := score; best := q end;
