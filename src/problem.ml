@@ -1,7 +1,7 @@
 open Printf
 open Problem_t
 
-let total = 45
+let total = 55
 let path n = sprintf "../problem/%d" n
 let parse i = Problem_j.problem_of_string @@ Std.input_file @@ path i
 let stage_x p = match p.stage_bottom_left with [x;_] -> x | _ -> assert false

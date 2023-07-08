@@ -1,1 +1,1 @@
-for i in {1..45}; do ./submit1 $i & done; wait
+for i in {1..55}; do ./submit1 $i & done; wait
