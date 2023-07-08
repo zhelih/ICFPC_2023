@@ -56,7 +56,7 @@ let solve p =
   in
 
   let snakes = Hashtbl.create 1 in
-  h_centers |> Hashtbl.iter (fun inst xy -> Hashtbl.add snakes inst (gen_cross xy));
+  h_centers |> Hashtbl.iter (fun inst xy -> Hashtbl.add snakes inst (gen_snake xy));
 
   p.musicians |> Array.iter begin fun inst ->
     let snake = Hashtbl.find snakes inst in
