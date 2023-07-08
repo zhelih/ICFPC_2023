@@ -36,14 +36,14 @@ let rec_run p placements score0 =
   loop 0;
   !changed, !new_score
 
-let run p placements =
+let run problem p placements =
   let placements = Array.of_list placements in
   let score0 = Solution.calc_score p placements in
-  printfn "Starting local search step = %f, score = %s" step (Solution.show_score score0);
+  printfn "problem %d Starting local search step = %f, score = %s" problem step (Solution.show_score score0);
   let rec loop i sc0 =
     let c, nsc = rec_run p placements sc0 in
     if c then (
-      if i mod 100 = 0 then printfn "Local Search : score = %s" (Solution.show_score nsc);
+      if i mod 100 = 0 then printfn "problem %d Local Search : score = %s" problem (Solution.show_score nsc);
       if i < 20_000 then loop (i+1) nsc
     )
   in
