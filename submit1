@@ -1,6 +1,6 @@
 suffix=$1
 i=$2
-if [ -r solution/$i ]; then
+if [ -r solution.$suffix/$i ]; then
   echo submitting $i
   curl -H 'Content-Type: application/json' -H "Authorization: Bearer $(cat token)" -XPOST https://api.icfpcontest.com/submission --data-binary @<(jq --argjson id $i --arg c "$(cat solution.$suffix/$i)" -n '{problem_id:$id, contents:$c}')
 fi
