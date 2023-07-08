@@ -81,7 +81,25 @@ let solve interrupt gen p =
   end;
   DynArray.to_list res
 
-let solve interrupt p =
+let taste_sum p inst = p.attendees |> List.fold_left (fun acc a -> a.tastes.(inst) +. acc) 0.
+
+let solve14 interrupt p =
+  match Array.to_list p.musicians with
+  | good::bad ->
+    let sol = solve interrupt gen_snake { p with musicians = [| good |] } in
+    let inst = Problem.instruments p |> Array.mapi (fun i _ -> taste_sum p i, i) in
+    Array.sort Stdlib.compare inst;
+(*     inst |> Array.iter (fun (sum,i) -> printfn "%f %d" sum i); *)
+    let stage = 718.,487. in
+    let snake = gen_snake stage in
+    let bad = bad |> List.mapi (fun i _ -> snake i) |> Array.of_list in
+    let bad' = Array.make (Array.length bad) (0.,0.) in
+    inst |> Array.iteri (fun i (_,j) -> if i <> Array.length inst -1 then bad'.(i) <- bad.(j));
+    sol @ Array.to_list bad'
+  | [] -> assert false
+
+let solve problem interrupt p =
+  if problem = 14 then solve14 interrupt p else
   let best = ref [] in
   let best_score = ref 0. in
   while !offset < 20. && not !interrupt do
